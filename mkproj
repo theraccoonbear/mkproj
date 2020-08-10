@@ -10,6 +10,28 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
 TMPL_ROOT=$DIR/mkproj-templates
 
+
+function checkTools {
+    MY_YARN=$(which yarn)
+    MY_JQ=$(which jq)
+    MY_GIT=$(which git)
+
+    if [[ -z "$MY_YARN" ]]; then
+        echo "You have not yet installed yarn! https://yarnpkg.com/getting-started/install"
+        exit 1
+    fi
+
+    if [[ -z "$MY_JQ" ]]; then
+        echo "You have not yet installed jq! https://stedolan.github.io/jq/download/"
+        exit 1
+    fi
+
+    if [[ -z "$MY_GIT" ]]; then
+        echo "You have not yet installed git!"
+        exit 1
+    fi
+}
+
 function makeTSProj {
     yarn init --yes
     yarn global add typescript
@@ -34,7 +56,9 @@ function makeTSProj {
     echo "You can run yarn to-ts to migrate your JS code to TypeScript"
 }
 
-if [[ ! -z "$1" ]] && [[ $1 == "ts" ]]; then
+checkTools
+
+if [[ $1 == "ts" ]]; then
     makeTSProj
 else
     echo "I don't know how to '$1'"
