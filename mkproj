@@ -1,0 +1,41 @@
+#!/bin/bash
+
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+
+TMPL_ROOT=$DIR/mkproj-templates
+
+function makeTSProj {
+    yarn init --yes
+    yarn global add typescript
+    yarn add -D @types/node eslint eslint-config-prettier eslint-plugin-prettier prettier source-map-support
+
+    RENAMER='find src/ -name \"*.js\" -exec rename '"'"'s/\\\\.js$/.ts/'"'"' '"'"'{}'"'"' +'
+    NEW_SCRIPTS=$(echo -e "{\x22start\x22: \x22node dist/index.js\x22, \x22to-ts\x22: \x22$RENAMER\x22, \x22build\x22: \x22tsc\x22, \x22build:watch\x22: \x22tsc -w\x22}")
+
+    mv package.json package.json.bak
+
+    cat package.json.bak | jq --argjson scripts "$NEW_SCRIPTS" '. + {scripts: $scripts}' > package.json
+
+    TMPL_DIR="$TMPL_ROOT/ts"
+    cp "$TMPL_DIR/tsconfig.json" .
+    cp -R "$TMPL_DIR/src" .
+    cp -R "$TMPL_DIR/dist" .
+    cp "$TMPL_DIR/.gitignore" .
+
+    yarn build
+    yarn start
+
+    echo "You can run yarn to-ts to migrate your JS code to TypeScript"
+}
+
+if [[ ! -z "$1" ]] && [[ $1 == "ts" ]]; then
+    makeTSProj
+else
+    echo "I don't know how to '$1'"
+fi
