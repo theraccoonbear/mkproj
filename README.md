@@ -9,9 +9,9 @@ Sure, there's lots of tools to do this, but why not make my own, half-functional
 `mkproj` is just a bash script tying together some other people's software that's
 _actually_ useful.  Make sure you have the following tools available:
 
- * `git`
- * `yarn`
- * `jq` (don't even ask)
+ * [`git`](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+ * [`yarn`](https://yarnpkg.com/getting-started/install)
+ * [`jq`](https://stedolan.github.io/jq/download/)
 
 ### What Can It Do?
 
