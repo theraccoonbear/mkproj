@@ -33,9 +33,9 @@ to inject a few helpful `script`s into your project's `package.json`.
 
 ```
 {
-    "start": "...",         // runs the compiled JS
-    "to-ts": "...",         // if you've copied your existing `.js` sources to `./src` it'll recursively rename them to `.ts`
-    "build": "tsc",         // compile your code
-    "build:watch": "tsc -w" // compile the code in watch mode
+    "start": "...",      // runs the compiled JS
+    "to-ts": "...",      // if you've copied your existing `.js` sources to `./src` it'll recursively rename them to `.ts`
+    "build": "...",      // compile your code
+    "build:watch": "..." // compile the code in watch mode
 }
 ```
